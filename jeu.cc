@@ -227,11 +227,16 @@ bool Jeu::lecture(const string& nomFichier) {
 bool Jeu::decodage_score(istringstream& data) {
     // Tenter de lire le score
     if (!(data >> score)) {
-        score = 0; // Mettre une valeur invalide pour le message d'erreur
+        score = 0;//valeur par defaut
+        cout << message::score_outside(score) << endl;
         return false; // Échec de la lecture
     }
-    // Vérifier la validité
-    return (score > 0 && score <= score_max);
+    // Vérifier la validité du score
+    if (score > score_max || score <= 0) {
+        cout << message::score_outside(score) << endl;
+        return false; // Score invalide
+    }
+    return true;
 }
 
 /**

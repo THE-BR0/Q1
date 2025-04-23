@@ -13,6 +13,7 @@ public:
     My_window(std::string file_name);
 
 private:
+    Jeu jeu;
     Gtk::Box main_box, panel_box, command_box;
     Gtk::Frame command_frame, info_frame;
     Gtk::Grid info_grid;
@@ -55,7 +56,7 @@ private:
     void on_drawing_left_click(int n_press, double x, double y);
     void on_drawing_right_click(int n_press, double x, double y);
     void on_drawing_move(double x, double y);
-    S2d scaled(S2d const &pos) const;
+    tools::S2d scaled(tools::S2d const &pos) const;
 
     void set_jeu(std::string file_name);
 };

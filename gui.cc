@@ -2,6 +2,7 @@
 #include <cassert>
 #include "graphic_gui.h"
 #include "gui.h"
+
 using namespace std;
 
 enum Response
@@ -38,7 +39,8 @@ My_window::My_window(string file_name)
                  Gtk::Label("faiseurs:"),
                  Gtk::Label("articulations:")}),
       previous_file_name(file_name),
-      jeu() // Initialize jeu
+      // ici éventuelle initialisation de l'attribut pour l'accès au jeu
+    jeu()
 {
     set_title("Linked-Crossing Challenge");
     set_child(main_box);
@@ -139,7 +141,7 @@ void My_window::start_clicked()
 }
 void My_window::step_clicked()
 {    if (!activated){
-    update();
+    //;
 }
 else return;
     // remplacer affichage par votre code
@@ -204,9 +206,9 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
         // remplacer affichage par votre code
 		//cout << keyval <<"  " << __func__ << endl;
          if (!activated){
-            update();
+            //;
         }
-    
+
         return true;
     case 'r':
         //meme code que pour restart
@@ -282,7 +284,7 @@ void My_window::dialog_response(int response, Gtk::FileChooserDialog *dialog)
     case SAVE:
         if (file_name != "")
         {
-            jeu.sauvegarder(file_name);
+        jeu.sauvegarder(file_name);
             dialog->hide();
         }
         break;
@@ -295,16 +297,16 @@ bool My_window::loop()
 {
     if (activated)
     {
-        update();
+        //;
         return true;
     }
     return false;
 }
-void My_window::update()
+/*void My_window:://
 {
 	// remplacer affichage par votre code
 	cout <<  __func__ << endl;
-    jeu.update();
+    jeu.//;
     update_infos();
     drawing.queue_draw();
 
@@ -318,7 +320,7 @@ void My_window::update()
         checks[0].set_sensitive(false);
         checks[1].set_sensitive(false);
 	 }
-}
+}*/
 
 void My_window::set_infos()
 {
@@ -352,8 +354,8 @@ void My_window::update_infos()
 
 void My_window::set_drawing()
 {
-    drawing.set_content_width(taille_dessin);
-    drawing.set_content_height(taille_dessin);
+    //drawing.set_content_width(taille_dessin);
+    //drawing.set_content_height(taille_dessin);
     drawing.set_expand();
     drawing.set_draw_func(sigc::mem_fun(*this, &My_window::on_draw));
 }
@@ -366,7 +368,7 @@ void My_window::on_draw(const Cairo::RefPtr<Cairo::Context> &cr,
     cr->translate(width / 2, height / 2);
     cr->scale(side / (2 * r_max), -side / (2 * r_max));
 
-    jeu.dessiner();
+    //jeu.dessiner();
 }
 
 void My_window::set_mouse_controller()
@@ -392,14 +394,14 @@ void My_window::set_mouse_controller()
 
 // cette fonction convertit l'entrée pos contenant les coordonnées (x,y) de la souris
 // dans l'espace GTKmm vers l'espace du Modèle => sortie de la fonction.
-S2d My_window::scaled(S2d const &pos) const
+/*S2d My_window::scaled(S2d const &pos) const
 {
     int width = drawing.get_width();
     int height = drawing.get_height();
     double ratio((2 * r_max) / min(width, height));
     return {ratio * (-width / 2 + pos.x),
             ratio * (height / 2 - pos.y)};
-}
+}*/
 
 void My_window::on_drawing_left_click(int n_press, double x, double y)
 {
@@ -420,7 +422,7 @@ void My_window::on_drawing_move(double x, double y)
 
 void My_window::set_jeu(string file_name)
 {
-    if (jeu.readFile(file_name)) {
+    /*if (jeu.lecture(file_name)) {
         buttons[B_SAVE].set_sensitive(true);
         buttons[B_START].set_sensitive(true);
         buttons[B_STEP].set_sensitive(true);
@@ -443,5 +445,5 @@ void My_window::set_jeu(string file_name)
         checks[1].set_sensitive(false);
     }
     update_infos();
-    drawing.queue_draw();
+    drawing.queue_draw();*/
 }
