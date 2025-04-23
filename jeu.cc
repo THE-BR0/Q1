@@ -461,3 +461,6 @@ bool Jeu::sauvegarder(const std::string& nom_fichier) const{
     file.close(); // Fermeture explicite
     return true; // Succès
 }
+void Jeu::dessiner() const {
+    
+}

@@ -125,7 +125,7 @@ void My_window::start_clicked()
         buttons[B_START].set_label("start");
         buttons[B_STEP].set_sensitive(true);
     }
-    else // if (appel pour obtenir le statut du jeu !== ON_GOING) // voir jeu.h
+    //else if (appel pour obtenir le statut du jeu !== ON_GOING) // voir jeu.h
     {
         loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
@@ -139,6 +139,7 @@ void My_window::start_clicked()
         buttons[B_STEP].set_sensitive(false);
     }
 }
+
 void My_window::step_clicked()
 {    if (!activated){
     //;
@@ -186,7 +187,7 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
             buttons[B_START].set_label("start");
             buttons[B_STEP].set_sensitive(true);
         }
-        else // if (appel pour obtenir le statut du jeu !== ON_GOING) // voir jeu.h
+        //else if (appel pour obtenir le statut du jeu !== ON_GOING) // voir jeu.h
         {
             loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
@@ -345,30 +346,29 @@ void My_window::update_infos()
         info_value[1].set_text(std::to_string(jeu.get_Nb_particules()));
         info_value[2].set_text(std::to_string(jeu.get_Nb_faiseurs()));
         info_value[3].set_text(std::to_string(jeu.get_Nb_articulations()));
-        /*for (auto &value : info_value)
+        for (auto &value : info_value)
         {
             value.set_text("0");
-        }*/
+        }
     }
 }
 
 void My_window::set_drawing()
 {
-    //drawing.set_content_width(taille_dessin);
-    //drawing.set_content_height(taille_dessin);
+    drawing.set_content_width(taille_dessin);
+    drawing.set_content_height(taille_dessin);
     drawing.set_expand();
     drawing.set_draw_func(sigc::mem_fun(*this, &My_window::on_draw));
 }
 void My_window::on_draw(const Cairo::RefPtr<Cairo::Context> &cr,
                         int width, int height)
 {
-
     graphic_set_context(cr);
     double side(min(width, height));
     cr->translate(width / 2, height / 2);
     cr->scale(side / (2 * r_max), -side / (2 * r_max));
 
-    //jeu.dessiner();
+    jeu.dessiner();
 }
 
 void My_window::set_mouse_controller()
@@ -422,7 +422,7 @@ void My_window::on_drawing_move(double x, double y)
 
 void My_window::set_jeu(string file_name)
 {
-    /*if (jeu.lecture(file_name)) {
+    if (jeu.lecture(file_name)) {
         buttons[B_SAVE].set_sensitive(true);
         buttons[B_START].set_sensitive(true);
         buttons[B_STEP].set_sensitive(true);
@@ -445,5 +445,5 @@ void My_window::set_jeu(string file_name)
         checks[1].set_sensitive(false);
     }
     update_infos();
-    drawing.queue_draw();*/
+    drawing.queue_draw();
 }

@@ -21,5 +21,5 @@ constexpr unsigned nb_particule_max(50);
 constexpr double delta_split(0.5); // radian
 constexpr double coef_split(0.8);
 constexpr unsigned score_max(8000);
-
+constexpr unsigned taille_dessin(500); //en pixel
 #endif

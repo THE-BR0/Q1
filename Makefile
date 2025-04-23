@@ -8,23 +8,21 @@ OFILES = $(CXXFILES:.cc=.o)
 
 all: $(OUT)
 
-# Fichiers ne dépendant pas de gtkmm
-tools.o: tools.cc tools.h
+tools.o: tools.cc tools.h constantes.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-chaine.o: chaine.cc chaine.h
+chaine.o: chaine.cc chaine.h tools.h constantes.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-jeu.o: jeu.cc jeu.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+jeu.o: jeu.cc jeu.h tools.h mobile.h chaine.h message.h graphic_gui.h constantes.h
+	$(CXX) $(CXXFLAGS) $(GTK_CFLAGS) -c $< -o $@
 
 message.o: message.cc message.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mobile.o: mobile.cc mobile.h
+mobile.o: mobile.cc mobile.h tools.h constantes.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Fichiers dépendant de gtkmm
 graphic.o: graphic.cc graphic_gui.h graphic.h
 	$(CXX) $(CXXFLAGS) $(GTK_CFLAGS) -c $< -o $@
 
@@ -34,7 +32,6 @@ gui.o: gui.cc graphic_gui.h graphic.h gui.h jeu.h tools.h constantes.h
 projet.o: projet.cc gui.h jeu.h graphic.h
 	$(CXX) $(CXXFLAGS) $(GTK_CFLAGS) -c $< -o $@
 
-# Règle de liaison (sans GTK_CFLAGS, seulement GTK_LIBS)
 $(OUT): $(OFILES)
 	$(CXX) $(CXXFLAGS) $(OFILES) -o $@ $(GTK_LIBS)
 

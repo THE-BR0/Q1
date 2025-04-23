@@ -32,24 +32,28 @@ public:
 	bool lecture(const std::string& nomFichier); // Retourne bool
 	bool sauvegarder(const std::string& nom_fichier) const; // Mettre à jour la déclaration
 
-	// Autres méthodes publiques
-	void reset();
-	void set_score(unsigned int score);
-	void ajouterFaiseur(const mobile::Faiseur& faiseur);
+	// getteurs
 	double get_score() const {return score;}
 	double get_Nb_articulations() const {return chaine.getArticulations().size();}
 	double get_Nb_faiseurs() const {return faiseurs.size();}
 	double get_Nb_particules() const {return particules.size();}
 	std::string get_status ();//a ecrire
+	Mode getMode() const {return mode;}
+	
+
+	void reset();
+	void set_score(unsigned int score);
+	void ajouterFaiseur(const mobile::Faiseur& faiseur);
 	void update();//a ecrire
+	void dessiner() const;
 
 private:
 	// Méthodes auxiliaires pour readFile (maintenant privées)
-	bool decodage_score(std::istringstream& data);       // Retourne bool
-	bool decodage_particule(std::istringstream& data);   // Retourne bool
-	bool decodage_faiseur(std::istringstream& data);     // Retourne bool
-	bool decodage_chaine(std::istringstream& data);      // Retourne bool
-	bool verifier_collisions_faiseurs() const; // Retourne bool
+	bool decodage_score(std::istringstream& data);       
+	bool decodage_particule(std::istringstream& data);   
+	bool decodage_faiseur(std::istringstream& data);     
+	bool decodage_chaine(std::istringstream& data);      
+	bool verifier_collisions_faiseurs() const; 
 
 	// Attributs principaux du jeu
 	unsigned int score;
