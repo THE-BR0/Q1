@@ -24,9 +24,7 @@ arene({0.0, 0.0}, r_max), mode() {
 Jeu::Jeu(unsigned int score, vector<unique_ptr<mobile::Particule>>&& particules,
          vector<unique_ptr<mobile::Faiseur>>&& faiseurs, Chaine chaine, Cercle arene, Mode mode)
     : score(score), particules(move(particules)), faiseurs(move(faiseurs)),
-      chaine(chaine), arene(arene), mode(mode) {
-        set_status(ONGOING);
-      } // Utiliser move pour transférer la propriété
+      chaine(chaine), arene(arene), mode(mode),statut(ONGOING) {} // Utiliser move pour transférer la propriété
 
 
 void Jeu::set_score(unsigned int newScore) {

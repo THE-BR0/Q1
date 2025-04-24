@@ -63,6 +63,7 @@ private:
 	Chaine chaine;
 	tools::Cercle arene;
 	Mode mode;
+	Status statut;
 };
 
 #endif // JEU_H
