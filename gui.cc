@@ -142,7 +142,7 @@ void My_window::start_clicked()
 
 void My_window::step_clicked()
 {    if (!activated){
-    //;
+    update():
 }
 else return;
     // remplacer affichage par votre code
@@ -298,16 +298,16 @@ bool My_window::loop()
 {
     if (activated)
     {
-        //;
+        update();
         return true;
     }
     return false;
 }
-/*void My_window:://
+void My_window::update()
 {
 	// remplacer affichage par votre code
-	cout <<  __func__ << endl;
-    jeu.//;
+	//cout <<  __func__ << endl;
+    jeu.update();
     update_infos();
     drawing.queue_draw();
 
@@ -321,7 +321,7 @@ bool My_window::loop()
         checks[0].set_sensitive(false);
         checks[1].set_sensitive(false);
 	 }
-}*/
+}
 
 void My_window::set_infos()
 {
@@ -394,18 +394,19 @@ void My_window::set_mouse_controller()
 
 // cette fonction convertit l'entrée pos contenant les coordonnées (x,y) de la souris
 // dans l'espace GTKmm vers l'espace du Modèle => sortie de la fonction.
-/*S2d My_window::scaled(S2d const &pos) const
+S2d My_window::scale(S2d const &pos) const
 {
     int width = drawing.get_width();
     int height = drawing.get_height();
     double ratio((2 * r_max) / min(width, height));
     return {ratio * (-width / 2 + pos.x),
             ratio * (height / 2 - pos.y)};
-}*/
+}
 
 void My_window::on_drawing_left_click(int n_press, double x, double y)
 {
 	// remplacer affichage par votre code
+    //equivalent de start/stop je crois
 	cout <<  __func__ << endl;
 }
 void My_window::on_drawing_right_click(int n_press, double x, double y)
@@ -423,6 +424,7 @@ void My_window::on_drawing_move(double x, double y)
 void My_window::set_jeu(string file_name)
 {
     if (jeu.lecture(file_name)) {
+        jeu.set_status(ONGOING);
         buttons[B_SAVE].set_sensitive(true);
         buttons[B_START].set_sensitive(true);
         buttons[B_STEP].set_sensitive(true);

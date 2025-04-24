@@ -24,7 +24,9 @@ arene({0.0, 0.0}, r_max), mode() {
 Jeu::Jeu(unsigned int score, vector<unique_ptr<mobile::Particule>>&& particules,
          vector<unique_ptr<mobile::Faiseur>>&& faiseurs, Chaine chaine, Cercle arene, Mode mode)
     : score(score), particules(move(particules)), faiseurs(move(faiseurs)),
-      chaine(chaine), arene(arene), mode(mode) {} // Utiliser move pour transférer la propriété
+      chaine(chaine), arene(arene), mode(mode) {
+        set_status(ONGOING);
+      } // Utiliser move pour transférer la propriété
 
 
 void Jeu::set_score(unsigned int newScore) {
@@ -461,6 +463,33 @@ bool Jeu::sauvegarder(const std::string& nom_fichier) const{
     file.close(); // Fermeture explicite
     return true; // Succès
 }
+string Jeu::get_status() {
+    switch (statut) {
+        case Status::ONGOING:
+            return "ONGOING"; // Ou "En cours",
+        case Status::WON:
+            return "WON";      // Ou "Gagné"
+        case Status::LOST:
+            return "LOST";     // Ou "Perdu"
+        
+    }
+}
+
+void Jeu::set_status(Status new_status) {
+    statut = new_status;
+}
+
+void Jeu::ajouterFaiseur(const mobile::Faiseur& faiseur) {
+    auto nouveau_faiseur = std::make_unique<mobile::Faiseur>(faiseur);
+    
+    tools::Cercle cercle_faiseur(nouveau_faiseur->get_position(), nouveau_faiseur->get_rayon());
+    
+    faiseurs.push_back(std::move(nouveau_faiseur));
+}
 void Jeu::dessiner() const {
     
+}
+void Jeu:: update(){
+    cout<<"update"<<endl;
+    return;
 }
