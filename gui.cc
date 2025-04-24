@@ -346,10 +346,10 @@ void My_window::update_infos()
         info_value[1].set_text(std::to_string(jeu.get_Nb_particules()));
         info_value[2].set_text(std::to_string(jeu.get_Nb_faiseurs()));
         info_value[3].set_text(std::to_string(jeu.get_Nb_articulations()));
-        for (auto &value : info_value)
+        /*for (auto &value : info_value)
         {
             value.set_text("0");
-        }
+        }*/
     }
 }
 

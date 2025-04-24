@@ -33,10 +33,12 @@ public:
 	bool sauvegarder(const std::string& nom_fichier) const; // Mettre à jour la déclaration
 
 	// getteurs
-	double get_score() const {return score;}
-	double get_Nb_articulations() const {return chaine.getArticulations().size();}
-	double get_Nb_faiseurs() const {return faiseurs.size();}
-	double get_Nb_particules() const {return particules.size();}
+	int get_score() const {
+		int a(score);
+		return a;}
+	int get_Nb_articulations() const {return chaine.getArticulations().size();}
+	int get_Nb_faiseurs() const {return faiseurs.size();}
+	int get_Nb_particules() const {return particules.size();}
 	std::string get_status ();//a ecrire
 	Mode getMode() const {return mode;}
 	
