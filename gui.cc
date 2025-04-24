@@ -125,7 +125,7 @@ void My_window::start_clicked()
         buttons[B_START].set_label("start");
         buttons[B_STEP].set_sensitive(true);
     }
-    //else if (appel pour obtenir le statut du jeu !== ON_GOING) // voir jeu.h
+    else if (jeu.get_status != "ONGOING") // voir jeu.h
     {
         loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
@@ -187,7 +187,7 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
             buttons[B_START].set_label("start");
             buttons[B_STEP].set_sensitive(true);
         }
-        else if (jeu.get_status !== "ONGOING") // voir jeu.h
+        else if (jeu.get_status != "ONGOING") // voir jeu.h
         {
             loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
@@ -311,7 +311,7 @@ void My_window::update()
     update_infos();
     drawing.queue_draw();
 
-     if (jeu.get_status() !== "ONGOING") // voir jeu.h
+     if (jeu.get_status() != "ONGOING") // voir jeu.h
      {
 		//~ ...
          buttons[B_SAVE].set_sensitive(false);
@@ -394,7 +394,7 @@ void My_window::set_mouse_controller()
 
 // cette fonction convertit l'entrée pos contenant les coordonnées (x,y) de la souris
 // dans l'espace GTKmm vers l'espace du Modèle => sortie de la fonction.
-tools::S2d My_window::scale(S2d const &pos) const
+tools::S2d My_window::scaled(tools::S2d const &pos) const
 {
     int width = drawing.get_width();
     int height = drawing.get_height();
