@@ -43,6 +43,7 @@ public:
 
 	void reset();
 	void set_score(unsigned int score);
+	void set_status(Status new_status);
 	void ajouterFaiseur(const mobile::Faiseur& faiseur);
 	void update();//a ecrire
 	void dessiner() const;
