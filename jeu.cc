@@ -471,6 +471,7 @@ string Jeu::get_status() {
             return "LOST";     // Ou "Perdu"
         
     }
+    return "ELSE"
 }
 
 void Jeu::set_status(Status new_status) {
