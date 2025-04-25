@@ -485,12 +485,12 @@ void Jeu::ajouterFaiseur(const mobile::Faiseur& faiseur) {
     faiseurs.push_back(std::move(nouveau_faiseur));
 }
 void Jeu::dessiner() const {
-    dessin_cercle(arene);
+    dessin_cercle(arene,GREEN);
     for (size_t i; i< particules.size();i++){
-        particules[i]->dessin;
+        particules[i]->dessin();
     }
     for (size_t j; j< faiseurs.size();j++){
-        faiseurs[j]->dessin;
+        faiseurs[j]->dessin();
     }
     
     

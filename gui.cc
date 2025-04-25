@@ -109,7 +109,7 @@ void My_window::save_clicked()
 void My_window::restart_clicked()
 {
     jeu.reset();
-    if (jeu.lecture(file_name)){
+    if (jeu.lecture(previous_file_name)){
     update_infos();
     drawing.queue_draw();
     }
@@ -218,7 +218,7 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
         // remplacer affichage par votre code
 		//cout << keyval <<"  " << __func__ << endl;
         jeu.reset();
-        if(jeu.lecture(file_name)){
+        if(jeu.lecture(previous_file_name)){
         update_infos();
         drawing.queue_draw();
         }
