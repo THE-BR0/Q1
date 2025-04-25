@@ -20,6 +20,7 @@ namespace mobile {
 		// Getters publics pour les attributs protégés
 		virtual const tools::S2d& get_position() const;
 		virtual const tools::Polar& get_vitesse() const;
+		virtual void dessin() const =0;
 
 	protected:
 		tools::S2d position;
@@ -34,7 +35,8 @@ namespace mobile {
 		const tools::S2d& get_position() const override;
 		const tools::Polar& get_vitesse() const override;
 		unsigned get_compteur() const;
-
+		//dessin:
+		void dessin() const override;// a ecrire
 
 	private:
 		unsigned compteur;
@@ -47,12 +49,16 @@ namespace mobile {
 		void initialisation_corps();
 		bool collision_element(const Faiseur& autre_faiseur) const;
 		const std::vector<tools::Cercle>& get_corps() const { return corps; }
+		void faiseurs_deplacement();//a ecrire
 
 		// Getters publics pour les attributs de Mobile (via héritage) et Faiseur
 		const tools::S2d& get_position() const override;
 		const tools::Polar& get_vitesse() const override;
 		double get_rayon() const;
 		int get_taille() const;
+
+		void dessin() const override;// a ecrire
+
 
 	private:
 		std::vector<tools::Cercle> corps;

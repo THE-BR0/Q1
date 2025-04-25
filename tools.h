@@ -3,7 +3,9 @@
 // Version : 8.0
 #ifndef TOOLS_H
 #define TOOLS_H
-constexpr double epsil_zero = 0.0;
+#include "graphic.h"
+
+constexpr double epsil_zero(0.5);
 
 namespace tools {
     struct S2d {
@@ -40,6 +42,11 @@ namespace tools {
     void renormalisation (double& alpha);
     void rebond(S2d current, Polar& VecteurVitesse) ;
     bool collisionEntreCercles(const Cercle& c1, const Cercle& c2);
+    //methodes de dessin :
+
+    void dessin_cercle(Cercle cercle, Color color);
+    void dessin_point(S2d point, Color color);
+    void dessin_ligne(S2d debut, S2d fin, Color color);
 
 }
 

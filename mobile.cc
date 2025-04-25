@@ -44,7 +44,9 @@ const Polar& Particule::get_vitesse() const {
 unsigned Particule::get_compteur() const {
     return compteur;
 }
-
+void Particule::dessin() const override{
+    dessin_point(position,GREEN);
+}
 
 //------------------------------------FAISEUR-------------------------------------
 Faiseur::Faiseur() : rayon(0.0), taille(0) {} // Initialiser aussi Mobile
@@ -123,6 +125,10 @@ int Faiseur::get_taille() const {
     return taille;
 }
 
-
+void Faiseur::dessin() const override{
+    for(size_t i; i<corps.size; i++){
+        dessin_cercle(corps[i],BLUE);
+    }
+}
 
 

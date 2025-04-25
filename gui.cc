@@ -109,8 +109,10 @@ void My_window::save_clicked()
 void My_window::restart_clicked()
 {
     jeu.reset();
+    if (jeu.lecture(file_name)){
     update_infos();
     drawing.queue_draw();
+    }
 }
 void My_window::start_clicked()
 {
@@ -207,8 +209,8 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
         // remplacer affichage par votre code
 		//cout << keyval <<"  " << __func__ << endl;
          if (!activated){
-            //;
-        }
+                update();
+        }       
 
         return true;
     case 'r':
@@ -216,9 +218,10 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
         // remplacer affichage par votre code
 		//cout << keyval <<"  " << __func__ << endl;
         jeu.reset();
+        if(jeu.lecture(file_name)){
         update_infos();
         drawing.queue_draw();
-
+        }
         return true;
     default:
         return false;

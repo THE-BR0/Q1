@@ -13,5 +13,6 @@ enum Color
     PURPLE,
     CYAN
 };
+void draw_circle(double x,double y, double r);
 
 #endif
