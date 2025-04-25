@@ -125,7 +125,7 @@ void My_window::start_clicked()
         buttons[B_START].set_label("start");
         buttons[B_STEP].set_sensitive(true);
     }
-    else if (jeu.get_status() != "ONGOING") // voir jeu.h
+    else if (jeu.get_status() == "ONGOING") // voir jeu.h
     {
         loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
@@ -187,7 +187,7 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
             buttons[B_START].set_label("start");
             buttons[B_STEP].set_sensitive(true);
         }
-        else if (jeu.get_status() != "ONGOING") // voir jeu.h
+        else if (jeu.get_status() == "ONGOING") // voir jeu.h
         {
             loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
                                                                  &My_window::loop),
