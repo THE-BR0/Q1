@@ -471,7 +471,7 @@ string Jeu::get_status() {
             return "LOST";     // Ou "Perdu"
         
     }
-    return "ELSE"
+    return "ELSE";
 }
 
 void Jeu::set_status(Status new_status) {
@@ -487,11 +487,13 @@ void Jeu::ajouterFaiseur(const mobile::Faiseur& faiseur) {
 }
 void Jeu::dessiner() const {
     dessin_cercle(arene,GREEN);
-    for (size_t i; i< particules.size();i++){
-        particules[i]->dessin();
+    for (const auto& particule : particules){
+        cout<<"a"<<endl;
+        particule->dessin();
     }
-    for (size_t j; j< faiseurs.size();j++){
-        faiseurs[j]->dessin();
+    for (const auto& faiseur : faiseurs){
+        cout<<"b"<<endl;
+        faiseur->dessin();
     }
     
     

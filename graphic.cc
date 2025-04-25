@@ -16,8 +16,18 @@ void graphic_set_context(const Cairo::RefPtr<Cairo::Context> &cr)
 // à compléter pour effectuer des dessins élémentaires: trait, cercle, ...
 void draw_circle(double x , double y , double r,Color color){
     set_color(color);
-    (*ptcr)->set_line_width(2.0);
     (*ptcr)->arc(x, y, r, 0.0, 2 * M_PI);
+    (*ptcr)->stroke();
+}
+void draw_point(double x, double y, Color color){
+    set_color(color);
+    (*ptcr)->arc(x, y, 0.0, 0.0, 2 * M_PI);
+    (*ptcr)->stroke();
+}
+void draw_line(double depart_x, double depart_y, double fin_x, double fin_y, Color color){
+    set_color(color);
+    (*ptcr)->move_to(depart_x,depart_y);
+    (*ptcr)->line_to(fin_x,fin_y);
     (*ptcr)->stroke();
 }
 

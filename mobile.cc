@@ -126,7 +126,7 @@ int Faiseur::get_taille() const {
 }
 
 void Faiseur::dessin() const {
-    for(size_t i; i<corps.size(); i++){
+    for(size_t i(0); i<corps.size(); i++){
         dessin_cercle(corps[i],BLUE);
     }
 }

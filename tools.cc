@@ -74,8 +74,8 @@ void tools::dessin_cercle(Cercle cercle, Color color){
 	draw_circle(cercle.get_centre().x,cercle.get_centre().y,cercle.get_rayon(),color);
 }
 void tools::dessin_point(S2d point, Color color){
-	cout<<"dessin point"<<endl;
+	draw_point(point.x,point.y,color);
 }
 void tools::dessin_ligne(S2d debut, S2d fin, Color color){
-	cout<<"dessin ligne"<<endl;
+	draw_line(debut.x,debut.y,fin.x,fin.y,color);
 }
