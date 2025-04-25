@@ -70,6 +70,6 @@ bool tools::collisionEntreCercles(const Cercle& c1, const Cercle& c2) {
     return c1.cercle_intersecte_cercle(c2);
 }
 void tools::dessin_cercle(Cercle cercle, Color color){
-	set_color(color);
-	draw_circle(cercle.centre.x,cercle.centre.y,cercle.rayon);
+	(*pctr)->set_color(color);
+	draw_circle(cercle.get_centre().x,cercle.get_centre().y,cercle.get_rayon());
 }

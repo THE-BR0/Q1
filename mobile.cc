@@ -44,7 +44,7 @@ const Polar& Particule::get_vitesse() const {
 unsigned Particule::get_compteur() const {
     return compteur;
 }
-void Particule::dessin() const override{
+void Particule::dessin() const{
     dessin_point(position,GREEN);
 }
 
@@ -125,8 +125,8 @@ int Faiseur::get_taille() const {
     return taille;
 }
 
-void Faiseur::dessin() const override{
-    for(size_t i; i<corps.size; i++){
+void Faiseur::dessin() const {
+    for(size_t i; i<corps.size(); i++){
         dessin_cercle(corps[i],BLUE);
     }
 }
