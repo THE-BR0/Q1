@@ -488,11 +488,9 @@ void Jeu::ajouterFaiseur(const mobile::Faiseur& faiseur) {
 void Jeu::dessiner() const {
     dessin_cercle(arene,GREEN);
     for (const auto& particule : particules){
-        cout<<"a"<<endl;
         particule->dessin();
     }
     for (const auto& faiseur : faiseurs){
-        cout<<"b"<<endl;
         faiseur->dessin();
     }
     

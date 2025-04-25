@@ -21,7 +21,7 @@ void draw_circle(double x , double y , double r,Color color){
 }
 void draw_point(double x, double y, Color color){
     set_color(color);
-    (*ptcr)->arc(x, y, 0.0, 0.0, 2 * M_PI);
+    (*ptcr)->arc(x, y, 1.0, 0.0, 2 * M_PI);
     (*ptcr)->stroke();
 }
 void draw_line(double depart_x, double depart_y, double fin_x, double fin_y, Color color){
