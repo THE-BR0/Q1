@@ -492,8 +492,7 @@ void Jeu::dessiner() const {
     for (const auto& faiseur : faiseurs){
         faiseur->dessin();
     }
-    
-    
+    chaine.dessin_chaine(RED);
 }
 void Jeu::update() {
     if (score > 0) {
