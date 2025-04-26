@@ -371,7 +371,7 @@ void My_window::on_draw(const Cairo::RefPtr<Cairo::Context> &cr,
     double side(min(width, height));
     cr->translate(width / 2, height / 2);
     cr->scale(side / (2 * r_max), -side / (2 * r_max));
-    if (drawing_on)){
+    if (drawing_on){
     jeu.dessiner();
     }
 }
