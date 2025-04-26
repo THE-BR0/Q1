@@ -39,7 +39,7 @@ public:
 	int get_Nb_articulations() const {return chaine.getArticulations().size();}
 	int get_Nb_faiseurs() const {return faiseurs.size();}
 	int get_Nb_particules() const {return particules.size();}
-	std::string get_status ();//a ecrire
+	std::string get_status ()const;
 	Mode getMode() const {return mode;}
 	
 
