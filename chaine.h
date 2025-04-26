@@ -17,7 +17,7 @@ public:
      * @return Référence vers cette chaîne
      */
     Chaine& operator=(Chaine&& other) noexcept;
-    void dessin_chaine(Color color);
+    void dessin_chaine(Color color) const;
 
     /**
          * Déplace l'effecteur vers une cible en respectant les contraintes de l'arène

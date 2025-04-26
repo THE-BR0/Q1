@@ -54,7 +54,7 @@ void Chaine::clear_articulations() {
     articulations.clear();
 }
 
-void Chaine::dessin_chaine(Color color){
+void Chaine::dessin_chaine(Color color)const{
     for ( size_t i(1); i<articulations.size(); i++ ){
         dessin_ligne(articulations[i-1],articulations[i],color );
         dessin_point(articulations[i-1], color);
