@@ -40,7 +40,8 @@ My_window::My_window(string file_name)
                  Gtk::Label("articulations:")}),
       previous_file_name(file_name),
       // ici éventuelle initialisation de l'attribut pour l'accès au jeu
-    jeu()
+    jeu(),
+    drawing_on(false)
 {
     set_title("Linked-Crossing Challenge");
     set_child(main_box);
@@ -95,7 +96,7 @@ void My_window::exit_clicked()
     hide();
 }
 void My_window::open_clicked()
-{
+{   jeu.reset();
     auto dialog = new Gtk::FileChooserDialog("Choose a text file",
                                              Gtk::FileChooserDialog::Action::OPEN);
     set_dialog(dialog);
@@ -370,8 +371,9 @@ void My_window::on_draw(const Cairo::RefPtr<Cairo::Context> &cr,
     double side(min(width, height));
     cr->translate(width / 2, height / 2);
     cr->scale(side / (2 * r_max), -side / (2 * r_max));
-
+    if (drawing_on)){
     jeu.dessiner();
+    }
 }
 
 void My_window::set_mouse_controller()
@@ -440,6 +442,9 @@ void My_window::set_jeu(string file_name)
                 checks[1].set_active(true);
                 break;
         }
+        drawing_on=true;
+        previous_file_name=file_name;
+        
     } else {
         buttons[B_SAVE].set_sensitive(false);
         buttons[B_START].set_sensitive(false);
@@ -447,6 +452,7 @@ void My_window::set_jeu(string file_name)
         checks[0].set_active(true);
         checks[0].set_sensitive(false);
         checks[1].set_sensitive(false);
+        drawing_on=false;
     }
     update_infos();
     drawing.queue_draw();
