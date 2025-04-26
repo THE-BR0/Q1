@@ -26,6 +26,23 @@ const S2d& Mobile::get_position() const {
 const Polar& Mobile::get_vitesse() const {
     return vecteurVitesse;
 }
+void Particule::increment_compteur() {
+    compteur++;
+}
+
+
+
+void Particule::particule_deplacement(const tools::Cercle& arene) {
+    S2d nouvelle_position = nextDestination(position, vecteurVitesse);
+    
+    if (!arene.point_appartient_cercle(nouvelle_position)) {
+        rebond(position, vecteurVitesse);
+        nouvelle_position = nextDestination(position, vecteurVitesse);
+    }
+    
+    position = nouvelle_position;
+}
+
 
 //-----------------------------------------------------------PARTICULE-------------
 
@@ -72,7 +89,17 @@ bool Faiseur::collision_element(const Faiseur& autre_faiseur) const {
     return collisionEntreCercles(c1, c2);
 }
 
-
+void Faiseur::faiseurs_deplacement(const tools::Cercle& arene) {
+    S2d nouvelle_position = nextDestination(position, vecteurVitesse);
+    
+    if (!arene.cercle_appartient_cercle({nouvelle_position, rayon})) {
+        rebond(position, vecteurVitesse);
+        nouvelle_position = nextDestination(position, vecteurVitesse);
+    }
+    
+    position = nouvelle_position;
+    initialisation_corps();
+}
 
 
 void Faiseur::initialisation_corps() {

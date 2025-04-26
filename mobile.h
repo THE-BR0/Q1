@@ -36,7 +36,9 @@ namespace mobile {
 		const tools::Polar& get_vitesse() const override;
 		unsigned get_compteur() const;
 		//dessin:
-		void dessin() const override;// a ecrire
+		void dessin() const override;
+		void increment_compteur();
+		void particule_deplacement(const tools::Cercle& arene);
 
 	private:
 		unsigned compteur;
@@ -49,7 +51,7 @@ namespace mobile {
 		void initialisation_corps();
 		bool collision_element(const Faiseur& autre_faiseur) const;
 		const std::vector<tools::Cercle>& get_corps() const { return corps; }
-		void faiseurs_deplacement();//a ecrire
+		void faiseurs_deplacement(const tools::Cercle& arene);
 
 		// Getters publics pour les attributs de Mobile (via héritage) et Faiseur
 		const tools::S2d& get_position() const override;

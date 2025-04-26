@@ -451,3 +451,4 @@ void My_window::set_jeu(string file_name)
     update_infos();
     drawing.queue_draw();
 }
+//oipoihpoihpoi

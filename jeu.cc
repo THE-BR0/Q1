@@ -1,4 +1,4 @@
-// jeu.h
+// jeu.cc
 // Auteur : selim Ben Tkhayat
 // Version : 5.0
 #include "jeu.h"
@@ -461,19 +461,18 @@ bool Jeu::sauvegarder(const std::string& nom_fichier) const{
     file.close(); // Fermeture explicite
     return true; // Succès
 }
-string Jeu::get_status() {
-    switch (statut) {
-        case Status::ONGOING:
-            return "ONGOING"; // Ou "En cours",
-        case Status::WON:
-            return "WON";      // Ou "Gagné"
-        case Status::LOST:
-            return "LOST";     // Ou "Perdu"
-        
+string Jeu::get_status() const {
+    switch(statut) {
+        case ONGOING: 
+            return "ONGOING";
+        case WON: 
+            return "WON";
+        case LOST: 
+            return "LOST";
+        deafault: 
+            return "UNKNOWN"; 
     }
-    return "ELSE";
 }
-
 void Jeu::set_status(Status new_status) {
     statut = new_status;
 }
@@ -496,7 +495,126 @@ void Jeu::dessiner() const {
     
     
 }
-void Jeu:: update(){
-    cout<<"update"<<endl;
-    return;
+void Jeu::update() {
+    if (score > 0) {
+        score--;
+    } else {
+        statut = LOST;
+        return;
+    }
+
+    for (size_t i = 0; i < particules.size(); i++) {
+        particules[i]->increment_compteur();
+
+        if (particules[i]->get_compteur() >= time_to_split) {
+            if (particules.size() >= nb_particule_max) {
+                particules.erase(particules.begin() + i);
+                i--;
+            } else {
+                decomposer_particule(i);
+                i--;
+            }
+        } else {
+            particules[i]->particule_deplacement(arene);
+        }
+    }
+
+    bool chaine_a_ete_detruite = false;
+    for (size_t i = 0; i < faiseurs.size(); ++i) {
+        bool collision_inter_faiseur = false;
+        for (size_t j = 0; j < faiseurs.size(); ++j) {
+            if (i == j) continue;
+            if (faiseurs[i]->collision_element(*faiseurs[j])) {
+                collision_inter_faiseur = true;
+                break;
+            }
+        }
+
+        if (!collision_inter_faiseur) {
+            faiseurs[i]->faiseurs_deplacement(arene);
+        }
+        // debloquer au rendu 3
+        /*if (collision_faiseur_chaine(i)) {
+            chaine.clear_articulations();
+            chaine_a_ete_detruite = true;
+            break;
+        }*/
+    }
+
+    /*if (mode == GUIDAGE && !chaine_a_ete_detruite) {
+        executer_algorithme_guidage();
+        
+        for (size_t i = 0; i < faiseurs.size(); ++i) {
+            if (collision_faiseur_chaine(i)) {
+                chaine.clear_articulations();
+                chaine_a_ete_detruite = true;
+                break;
+            }
+        }
+
+        if (!chaine_a_ete_detruite /*&& but_dans_region_capture()) {
+            statut = WON;
+        }
+    }*/
+} 
+/*bool Jeu::collision_faiseur_chaine(size_t i) const {
+   
+    if (i >= faiseurs.size()) {
+        return false;
+    }
+
+    const auto& faiseur_ptr = faiseurs[i]; 
+    const auto& articulations = chaine.getArticulations(); 
+
+    if (articulations.empty()) {
+        return false;
+    }
+
+    const auto& corps_faiseur = faiseur_ptr->get_corps();
+
+    tools::Cercle tete_faiseur(faiseur_ptr->get_position(), faiseur_ptr->get_rayon());
+
+    for (const S2d& articulation : articulations) {
+        if (tete_faiseur.point_appartient_cercle(articulation)) {
+            return true;
+        }
+
+        for (const tools::Cercle& segment : corps_faiseur) {
+            if (segment.point_appartient_cercle(articulation)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}*/
+void Jeu::decomposer_particule(size_t index) {
+    S2d position = particules[index]->get_position();
+    Polar vitesse = particules[index]->get_vitesse();
+    
+    Polar vitesse1 = vitesse;
+    Polar vitesse2 = vitesse;
+    
+    vitesse1.theta += delta_split;
+    vitesse2.theta -= delta_split;
+    
+    renormalisation(vitesse1.theta);
+    renormalisation(vitesse2.theta);
+    
+    vitesse1.r *= coef_split;
+    vitesse2.r *= coef_split;
+    
+    particules.erase(particules.begin() + index);
+    
+    particules.push_back(make_unique<mobile::Particule>(position, vitesse1, 1));
+    particules.push_back(make_unique<mobile::Particule>(position, vitesse2, 1));
+
+
 }
+
+
+/*
+void Jeu::executer_algorithme_guidage() {
+   
+}
+*/

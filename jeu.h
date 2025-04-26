@@ -47,8 +47,9 @@ public:
 	void set_score(unsigned int score);
 	void set_status(Status new_status);
 	void ajouterFaiseur(const mobile::Faiseur& faiseur);
-	void update();//a ecrire
+	void update();
 	void dessiner() const;
+	void decomposer_particule(size_t index);
 
 private:
 	// Méthodes auxiliaires pour readFile (maintenant privées)
