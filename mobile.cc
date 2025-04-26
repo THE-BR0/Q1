@@ -84,9 +84,24 @@ Faiseur::Faiseur(S2d position,Polar vecteurVitesse, double rayon, int taille)
 }
 
 bool Faiseur::collision_element(const Faiseur& autre_faiseur) const {
-    const Cercle c1(this->position, this->rayon);
-    const Cercle c2(autre_faiseur.position, autre_faiseur.rayon);
-    return collisionEntreCercles(c1, c2);
+    const Cercle tete_this(this->position, this->rayon); 
+    const Cercle tete_autre(autre_faiseur.position, autre_faiseur.rayon);
+    if (tools::collisionEntreCercles(tete_this, tete_autre)) {
+        return true; // Collision détectée
+    }
+
+    const auto& corps_autre = autre_faiseur.get_corps(); // Récupère les segments de l'autre
+    for (const auto& segment_autre : corps_autre) {
+        if (tools::collisionEntreCercles(tete_this, segment_autre)) {
+            return true; // Collision détectée
+        }
+    }
+    const auto& corps_this = this->get_corps(); // Récupère les segments de this
+    for (const auto& segment_this : corps_this) {
+        if (tools::collisionEntreCercles(segment_this, tete_autre)) {
+            return true; // Collision détectée
+        }
+    }
 }
 
 void Faiseur::faiseurs_deplacement(const tools::Cercle& arene) {

@@ -187,33 +187,6 @@ bool Jeu::lecture(const string& nomFichier) {
              return false;
          }
     }
-
-    // Vérifications finales après la boucle
-    if (section != FIN && section != MODE) { // Si on n'a pas atteint la section MODE ou FIN
-         cout << "Erreur: Fin de fichier inattendue ou section manquante." << endl;
-         reset();
-         return false;
-    }
-     if (particules.size() != static_cast<size_t>(nbPart)) {
-         cout << "Erreur: Nombre de particules lu (" << particules.size()
-              << ") ne correspond pas au nombre attendu (" << nbPart << ")." << endl;
-         reset();
-         return false;
-     }
-     if (faiseurs.size() != static_cast<size_t>(nbFais)) {
-         cout << "Erreur: Nombre de faiseurs lu (" << faiseurs.size()
-              << ") ne correspond pas au nombre attendu (" << nbFais << ")." << endl;
-         reset();
-         return false;
-     }
-     if (chaine.getArticulations().size() != static_cast<size_t>(nbArt)) {
-         cout << "Erreur: Nombre d'articulations lues (" << chaine.getArticulations().size()
-              << ") ne correspond pas au nombre attendu (" << nbArt << ")." << endl;
-         reset();
-         return false;
-     }
-
-
     cout << message::success() << endl;
     file.close(); // Fermeture explicite (bien que RAII s'en charge)
     return true; // Succès
@@ -369,11 +342,7 @@ bool Jeu::decodage_chaine(istringstream& data) {
             // L'indice du message est celui de l'articulation qu'on essaie d'ajouter
             return false;
         }
-         if (dist_prec < epsil_zero) { // Vérifier si superposée à la précédente
-             cout << "Erreur: Articulation " << arts.size()
-                  << " superposée à la précédente." << endl;
-             return false;
-         }
+        
     }
 
     // 3. Validation: Collision avec les faiseurs EXISTANTS
@@ -501,7 +470,6 @@ void Jeu::update() {
         statut = LOST;
         return;
     }
-
     for (size_t i = 0; i < particules.size(); i++) {
         particules[i]->increment_compteur();
 
@@ -517,76 +485,51 @@ void Jeu::update() {
             particules[i]->particule_deplacement(arene);
         }
     }
-
-    bool chaine_a_ete_detruite = false;
+    vector<bool> faiseur_doit_sarreter(faiseurs.size(), false);
     for (size_t i = 0; i < faiseurs.size(); ++i) {
-        bool collision_inter_faiseur = false;
-        for (size_t j = 0; j < faiseurs.size(); ++j) {
-            if (i == j) continue;
-            if (faiseurs[i]->collision_element(*faiseurs[j])) {
-                collision_inter_faiseur = true;
-                break;
-            }
+        for (size_t j = i + 1; j < faiseurs.size(); ++j) {
+            // Collision tête-tête
+            tools::Cercle tete_i(faiseurs[i]->get_position(), faiseurs[i]->get_rayon());
+            tools::Cercle tete_j(faiseurs[j]->get_position(), faiseurs[j]->get_rayon());
+            col_fais(tete_i, tete_j, faiseur_doit_sarreter, i, j);
         }
-
-        if (!collision_inter_faiseur) {
+    }
+    for (size_t i = 0; i < faiseurs.size(); ++i) {
+        if (!faiseur_doit_sarreter[i]) {
             faiseurs[i]->faiseurs_deplacement(arene);
         }
-        // debloquer au rendu 3
-        /*if (collision_faiseur_chaine(i)) {
-            chaine.clear_articulations();
-            chaine_a_ete_detruite = true;
-            break;
-        }*/
     }
-
-    /*if (mode == GUIDAGE && !chaine_a_ete_detruite) {
-        executer_algorithme_guidage();
-        
-        for (size_t i = 0; i < faiseurs.size(); ++i) {
-            if (collision_faiseur_chaine(i)) {
-                chaine.clear_articulations();
-                chaine_a_ete_detruite = true;
-                break;
-            }
-        }
-
-        if (!chaine_a_ete_detruite /*&& but_dans_region_capture()) {
-            statut = WON;
-        }
-    }*/
+    bool chaine_a_ete_detruite = false;
 } 
-/*bool Jeu::collision_faiseur_chaine(size_t i) const {
-   
-    if (i >= faiseurs.size()) {
-        return false;
+
+void Jeu::col_fais(const tools::Cercle& tete_i, const tools::Cercle& tete_j, 
+                  std::vector<bool>& faiseur_doit_sarreter, 
+                  size_t i, size_t j) {
+    if (tools::collisionEntreCercles(tete_i, tete_j)) {
+        // Les deux têtes se touchent, les deux faiseurs s'arrêtent
+        faiseur_doit_sarreter[i] = true;
+        faiseur_doit_sarreter[j] = true;
+        return; // Use return instead of continue since we're not in a loop
     }
-
-    const auto& faiseur_ptr = faiseurs[i]; 
-    const auto& articulations = chaine.getArticulations(); 
-
-    if (articulations.empty()) {
-        return false;
-    }
-
-    const auto& corps_faiseur = faiseur_ptr->get_corps();
-
-    tools::Cercle tete_faiseur(faiseur_ptr->get_position(), faiseur_ptr->get_rayon());
-
-    for (const S2d& articulation : articulations) {
-        if (tete_faiseur.point_appartient_cercle(articulation)) {
-            return true;
-        }
-
-        for (const tools::Cercle& segment : corps_faiseur) {
-            if (segment.point_appartient_cercle(articulation)) {
-                return true;
-            }
+    
+    // Collision tête i avec corps j
+    const auto& corps_j = faiseurs[j]->get_corps();
+    for (const auto& segment : corps_j) {
+        if (tools::collisionEntreCercles(tete_i, segment)) {
+            faiseur_doit_sarreter[i] = true;
+            break;
         }
     }
-
-    return false;
-}*/
+    
+    // Collision tête j avec corps i
+    const auto& corps_i = faiseurs[i]->get_corps();
+    for (const auto& segment : corps_i) {
+        if (tools::collisionEntreCercles(tete_j, segment)) {
+            faiseur_doit_sarreter[j] = true;
+            break;
+        }
+    }
+}
 void Jeu::decomposer_particule(size_t index) {
     S2d position = particules[index]->get_position();
     Polar vitesse = particules[index]->get_vitesse();

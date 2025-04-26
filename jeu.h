@@ -50,6 +50,9 @@ public:
 	void update();
 	void dessiner() const;
 	void decomposer_particule(size_t index);
+	void col_fais(const tools::Cercle& tete_i, const tools::Cercle& tete_j, 
+                  std::vector<bool>& faiseur_doit_sarreter, 
+                  size_t i, size_t j);
 
 private:
 	// Méthodes auxiliaires pour readFile (maintenant privées)
