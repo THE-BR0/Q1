@@ -31,19 +31,6 @@ void Particule::increment_compteur() {
 }
 
 
-
-void Particule::particule_deplacement(const tools::Cercle& arene) {
-    S2d nouvelle_position = nextDestination(position, vecteurVitesse);
-    
-    if (!arene.point_appartient_cercle(nouvelle_position)) {
-        rebond(position, vecteurVitesse);
-        nouvelle_position = nextDestination(position, vecteurVitesse);
-    }
-    
-    position = nouvelle_position;
-}
-
-
 //-----------------------------------------------------------PARTICULE-------------
 
 Particule::Particule(S2d position, Polar vecteurVitesse, double compteur)
@@ -65,8 +52,19 @@ void Particule::dessin() const{
     dessin_point(position,GREEN);
 }
 
+
+void Particule::particule_deplacement(const tools::Cercle& arene) {
+    S2d nouvelle_position = nextDestination(position, vecteurVitesse);
+    
+    if (!arene.point_appartient_cercle(nouvelle_position)) {
+        rebond(position, vecteurVitesse);
+        nouvelle_position = nextDestination(position, vecteurVitesse);
+    }
+    
+    position = nouvelle_position;
+}
 //------------------------------------FAISEUR-------------------------------------
-Faiseur::Faiseur() : rayon(0.0), taille(0) {} // Initialiser aussi Mobile
+Faiseur::Faiseur() : rayon(0.0), taille(0) {} 
 
 Faiseur::Faiseur(S2d position,Polar vecteurVitesse, double rayon, int taille)
 : Mobile(position,vecteurVitesse), rayon(rayon),taille(taille) {
@@ -87,23 +85,30 @@ bool Faiseur::collision_element(const Faiseur& autre_faiseur) const {
     const Cercle tete_this(this->position, this->rayon); 
     const Cercle tete_autre(autre_faiseur.position, autre_faiseur.rayon);
     if (tools::collisionEntreCercles(tete_this, tete_autre)) {
-        return true; // Collision détectée
+        return true; 
     }
 
-    const auto& corps_autre = autre_faiseur.get_corps(); // Récupère les segments de l'autre
+    const auto& corps_autre = autre_faiseur.get_corps(); 
     for (const auto& segment_autre : corps_autre) {
         if (tools::collisionEntreCercles(tete_this, segment_autre)) {
-            return true; // Collision détectée
+            return true; 
         }
     }
-    const auto& corps_this = this->get_corps(); // Récupère les segments de this
+    const auto& corps_this = this->get_corps(); 
     for (const auto& segment_this : corps_this) {
         if (tools::collisionEntreCercles(segment_this, tete_autre)) {
-            return true; // Collision détectée
+            return true; 
         }
     }
+    return false;
 }
 
+/*
+ * Calcule la prochaine position potentielle en fonction de la position actuelle et du vecteur vitesse.
+ * Si la prochaine position est en dehors de l'arène fournie, simule un rebond en ajustant
+ * la position et le vecteur vitesse, puis recalcule la prochaine position.
+ * Enfin, met à jour la position principale du Faiseur .
+ */
 void Faiseur::faiseurs_deplacement(const tools::Cercle& arene) {
     S2d nouvelle_position = nextDestination(position, vecteurVitesse);
     
@@ -112,11 +117,16 @@ void Faiseur::faiseurs_deplacement(const tools::Cercle& arene) {
         nouvelle_position = nextDestination(position, vecteurVitesse);
     }
     
+    vector<tools::Cercle> anciennes_positions(corps);
     position = nouvelle_position;
-    initialisation_corps();
+    corps[0].change_centre(nouvelle_position);
+    for (size_t i (1); i< corps.size(); i++){
+        corps[i].change_centre(anciennes_positions[i-1].get_centre());
+    }
+    
 }
 
-
+//Initialise le corps du Faiseur.
 void Faiseur::initialisation_corps() {
     if (taille <= 0) return;
 
@@ -142,21 +152,15 @@ void Faiseur::initialisation_corps() {
         corps[i].change_centre(pos);
         corps[i].change_rayon(rayon);
         
-        // Vérification de sécurité
-        if (!Arene_ex.cercle_appartient_cercle(corps[i])) {
-            const auto& centre = corps[i].get_centre();
-            cout << message::faiseur_outside(centre.x, centre.y) << endl;
-        }
     }
 }
 
-// Implémentation des getters pour Faiseur
 const S2d& Faiseur::get_position() const {
-    return Mobile::get_position(); // Appel au getter de la classe de base
+    return Mobile::get_position(); 
 }
 
 const Polar& Faiseur::get_vitesse() const {
-    return Mobile::get_vitesse(); // Appel au getter de la classe de base
+    return Mobile::get_vitesse(); 
 }
 
 double Faiseur::get_rayon() const {
@@ -172,5 +176,3 @@ void Faiseur::dessin() const {
         dessin_cercle(corps[i],BLUE);
     }
 }
-
-

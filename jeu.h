@@ -31,7 +31,7 @@ public:
 	// Lecture et sauvegarde
 	bool lecture(const std::string& nomFichier); // Retourne bool
 	bool sauvegarder(const std::string& nom_fichier) const; // Mettre à jour la déclaration
-
+	bool faux_reset();
 	// getteurs
 	int get_score() const {
 		int a(score);
@@ -73,4 +73,3 @@ private:
 };
 
 #endif // JEU_H
-

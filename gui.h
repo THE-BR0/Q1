@@ -1,3 +1,7 @@
+// mobile.cc
+// Auteur : theo brochier
+// Version : 2.0
+
 #ifndef GUI_H
 #define GUI_H
 

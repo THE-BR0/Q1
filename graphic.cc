@@ -1,3 +1,6 @@
+// mobile.cc
+// Auteur : theo brochier
+// Version : 4.0
 #include <cmath>
 #include <iostream>
 #include "graphic_gui.h"

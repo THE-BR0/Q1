@@ -32,9 +32,11 @@ namespace tools {
         double get_rayon() const { return rayon; }
 
     private:
-        S2d centre;   // Centre du cercle
-        double rayon; // Rayon du cercle
+        S2d centre;   
+        double rayon; 
+        
     };
+
     double dist_deux_pts(const S2d& p1,const S2d& p2);
     Polar cartesianToPolar(S2d cart);
     S2d polarToCartesian( Polar polar);

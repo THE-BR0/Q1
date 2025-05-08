@@ -1,6 +1,6 @@
 // jeu.cc
 // Auteur : selim Ben Tkhayat
-// Version : 5.0
+// Version : 7.0
 #include "jeu.h"
 #include <iostream>
 #include <fstream>
@@ -8,8 +8,8 @@
 #include <cmath>
 #include <string>
 #include <memory>
-#include <vector>   // Ajout pour std::vector
-#include <iomanip>  // Ajout pour std::setprecision, std::fixed
+#include <vector>   
+#include <iomanip>  
 #include "tools.h"
 #include "mobile.h"
 #include "chaine.h"
@@ -24,17 +24,15 @@ arene({0.0, 0.0}, r_max), mode() {
 Jeu::Jeu(unsigned int score, vector<unique_ptr<mobile::Particule>>&& particules,
          vector<unique_ptr<mobile::Faiseur>>&& faiseurs, Chaine chaine, Cercle arene, Mode mode)
     : score(score), particules(move(particules)), faiseurs(move(faiseurs)),
-      chaine(chaine), arene(arene), mode(mode),statut(ONGOING) {} // Utiliser move pour transférer la propriété
+      chaine(chaine), arene(arene), mode(mode),statut(ONGOING) {} 
 
 
 void Jeu::set_score(unsigned int newScore) {
     score = newScore;
 }
 
-/**
- * Réinitialise complètement l'état du jeu
- * Remet le score à zéro et supprime tous les objets
- */
+
+//Réinitialise complètement l'état du jeu
 void Jeu::reset() {
     score = 0;
     particules.clear();
@@ -45,160 +43,87 @@ void Jeu::reset() {
 
 bool Jeu::lecture(const string& nomFichier) {
     ifstream file(nomFichier);
-    reset(); // Réinitialisation préalable
-
+    reset(); 
     if (!file.is_open()) {
-        cout << "Erreur: Impossible d'ouvrir le fichier " << nomFichier << endl;
-        return false; // Échec de l'ouverture
-    }
-
+        return false;}
     string line;
     enum Section {
         SCORE, NB_PARTICULES, PARTICULES, NB_FAISEURS, FAISEURS, NB_ARTICULATIONS,
-        ARTICULATIONS, MODE, FIN
-    };
+        ARTICULATIONS, MODE, FIN};
     Section section = SCORE;
     int nbPart = 0, nbFais = 0, nbArt = 0;
-    size_t compteur_part_lues = 0;
-    size_t compteur_fais_lus = 0;
-    size_t compteur_art_lues = 0;
-
+    size_t compteur_part_lues = 0,compteur_fais_lus = 0,compteur_art_lues = 0;
     auto passerAuxDonnees = [&](int nombre, Section actuelle, Section suivante,
                                 Section saut) {
-        section = (nombre == 0) ? saut : suivante;
-    };
-
+        section = (nombre == 0) ? saut : suivante;};
     while (section != FIN && getline(file, line)) {
         if (line.empty() || line[0] == '#' || line.find_first_not_of(" \t\r\n") ==
             string::npos) continue; // Ignore lignes vides/commentaires
-
         istringstream iss(line);
         iss >> ws;
         switch (section) {
             case SCORE:
                 if (!decodage_score(iss)) {
-                    cout << message::score_outside(score); // Message d'erreur déjà dans decodage
-                    reset(); // Nettoyer en cas d'erreur
-                    return false;
-                }
+                    cout << message::score_outside(score); 
+                    reset();return false;}
                 section = NB_PARTICULES;
                 break;
-
             case NB_PARTICULES:
                 if (!(iss >> nbPart) || nbPart < 0 ||
                     static_cast<size_t>(nbPart) > nb_particule_max) {
                     cout << message::nb_particule_outside(nbPart);
-                    reset();
-                    return false;
-                }
+                    reset();return false;}
                 passerAuxDonnees(nbPart, NB_PARTICULES, PARTICULES, NB_FAISEURS);
                 break;
-
             case PARTICULES:
                 if (!decodage_particule(iss)) {
-                    // Message d'erreur déjà dans decodage_particule
-                    reset();
-                    return false;
-                }
+                    reset();return false;}
                 compteur_part_lues++;
                 if (compteur_part_lues >= static_cast<size_t>(nbPart)) {
-                    section = NB_FAISEURS;
-                }
+                    section = NB_FAISEURS;}
                 break;
-
             case NB_FAISEURS:
                  if (!(iss >> nbFais) || nbFais < 0) {
                     cout << message::faiseur_nbe(nbFais) << endl;
-                    reset();
-                    return false;
-                }
+                    reset();return false;}
                 passerAuxDonnees(nbFais, NB_FAISEURS, FAISEURS, NB_ARTICULATIONS);
                 break;
-
             case FAISEURS:
                 if (!decodage_faiseur(iss)) {
-                     // Message d'erreur déjà dans decodage_faiseur ou verifier_collisions
                     reset();
-                    return false;
-                }
+                    return false;}
                 compteur_fais_lus++;
                 if (compteur_fais_lus >= static_cast<size_t>(nbFais)) {
-                    // Vérifier les collisions inter-faiseurs UNE SEULE FOIS après lecture
                     if (!verifier_collisions_faiseurs()) {
-                        // Message déjà affiché dans verifier_collisions_faiseurs
-                        reset();
-                        return false;
-                    }
-                    section = NB_ARTICULATIONS;
-                }
+                        reset();return false;}
+                    section = NB_ARTICULATIONS;}
                 break;
-
             case NB_ARTICULATIONS:
                 if (!(iss >> nbArt) || nbArt < 0) {
-                    cout << "Erreur: Nombre d'articulations invalide (" << nbArt << ")."
-                         << endl;
-                    reset();
-                    return false;
-                }
-                 // Vérifier si le nombre d'articulations est cohérent avec la chaîne
-                 // (une chaîne vide doit avoir 0 articulations)
-                 if (nbArt > 0 && chaine.getArticulations().empty() && nbArt != 1) {
-                     // Si on attend des articulations mais que la chaîne est vide
-                     // et qu'on n'est pas en train de lire la première.
-                     // Ou si nbArt == 0 mais la chaîne n'est pas vide (géré par reset)
-                 }
+                    reset();return false; }
                 passerAuxDonnees(nbArt, NB_ARTICULATIONS, ARTICULATIONS, MODE);
                 break;
-
             case ARTICULATIONS:
                 if (!decodage_chaine(iss)) {
-                    // Message d'erreur déjà dans decodage_chaine
-                    reset();
-                    return false;
-                }
+                    reset();return false;}
                 compteur_art_lues++;
                 if (compteur_art_lues >= static_cast<size_t>(nbArt)) {
-                     // Validation post-articulations (collision avec faiseurs)
-                     // est déjà faite dans decodage_chaine pour chaque articulation.
-                     // On pourrait ajouter une validation globale de la chaîne ici si nécessaire.
-                    section = MODE;
-                }
+                    section = MODE;}
                 break;
-
             case MODE: {
                 string modeStr;
-                if (!(iss >> modeStr) || (modeStr != "CONSTRUCTION" && modeStr != "GUIDAGE")) {
-                     reset();
-                     return false;
-                }
+                if (!(iss>>modeStr)||(modeStr!="CONSTRUCTION"&&modeStr!="GUIDAGE")) {
+                     reset();return false;}
                 mode = (modeStr == "CONSTRUCTION") ? CONSTRUCTION : GUIDAGE;
                 section = FIN; // Fin de la lecture attendue
-                break;
-            }
-
-            case FIN:
-                // Ne devrait pas arriver ici si le fichier est bien formé
-                break;
-        }
-         // Vérifier s'il reste des caractères non lus sur la ligne (sauf pour FIN)
-         if (section != FIN && !(iss >> std::ws).eof()) {
-             cout << "Erreur: Caractères supplémentaires invalides sur la ligne: " << line << endl;
-             reset();
-             return false;
-         }
-    }
+                break;}
+            case FIN:break;}}
     cout << message::success() << endl;
-    file.close(); // Fermeture explicite (bien que RAII s'en charge)
-    return true; // Succès
-}
+    file.close(); 
+    return true; }
 
-/**
- * Vérifie et charge le score depuis le flux d'entrée
- *  data Flux contenant le score
- * @return true si le score est valide (entre 1 et SCORE_MAX), false sinon.
- */
+
 bool Jeu::decodage_score(istringstream& data) {
-    // Tenter de lire le score
     if (!(data >> score)) {
         score = 0;//valeur par defaut
         cout << message::score_outside(score) << endl;
@@ -278,14 +203,14 @@ bool Jeu::decodage_faiseur(istringstream& data) {
     }
 
     S2d pos{x, y};
-    Polar vit{d, a}; // Attention: l'ordre dans Polar est {distance, angle}
+    Polar vit{d, a}; 
 
     // Créer temporairement pour vérifier l'appartenance à l'arène
     auto temp_faiseur_ptr = make_unique<mobile::Faiseur>(pos, vit, r, taille);
     temp_faiseur_ptr->initialisation_corps(); // Initialiser pour vérifier le corps
 
     // Vérifier si le centre et tous les éléments du corps sont dans l'arène
-    if (!arene.cercle_appartient_cercle({pos, r})) { // Vérifie le cercle englobant
+    if (!arene.cercle_appartient_cercle({pos, r})) { 
         cout << message::faiseur_outside(x, y) << endl;
         return false;
     }
@@ -301,70 +226,60 @@ bool Jeu::decodage_faiseur(istringstream& data) {
     // Si tout est valide, ajouter le faiseur au vecteur
     faiseurs.push_back(std::move(temp_faiseur_ptr));
 
-    // La vérification des collisions inter-faiseurs est faite APRES lecture de tous les faiseurs
-    // La vérification des collisions avec les articulations est faite dans decodage_chaine
-
     return true; // Succès
 }
 
 bool Jeu::decodage_chaine(istringstream& data) {
     double x, y;
-    // Tenter de lire les coordonnées
+    // Tenter de lire les coordonnées x et y
     if (!(data >> x >> y)) {
-        cout << "Erreur: Format de ligne d'articulation incorrect." << endl;
-        return false;
+        cout << "Format de ligne incorrect." << endl;
+        return false; // Échec de la lecture
     }
 
-    const S2d pos{x, y};
-    auto& arts = chaine.getArticulations(); // Référence au vecteur existant
+    const S2d pos{x, y}; // Créer le point de l'articulation
+    auto& arts = chaine.getArticulations(); // Référence au vecteur d'articulations
 
-    // 1. Validation: Position dans l'arène
+    // Vérifier si le point est dans l'arène
     if (!arene.point_appartient_cercle(pos)) {
         cout << message::articulation_outside(x, y) << endl;
         return false;
     }
 
-    // 2. Validation: Contraintes de la chaîne (racine ou inter-articulations)
-    if (arts.empty()) { // Si c'est la première articulation (racine)
+    // Cas de la première articulation (racine de la chaîne)
+    if (arts.empty()) {
         double dist_au_centre = dist_deux_pts(pos, arene.get_centre());
-        // La racine doit être sur le bord extérieur de la zone de capture
-        if (abs(dist_au_centre - (r_max - r_capture / 2.0)) > r_capture / 2.0 + epsil_zero) {
-             // Permet une tolérance autour du cercle r_max - r_capture
-             // Ajustement potentiel nécessaire selon la définition exacte attendue
+        // Vérifier si la racine est à la bonne distance du bord de l'arène
+        if (dist_au_centre < r_max - r_capture || dist_au_centre > r_max) {
             cout << message::chaine_racine(pos.x, pos.y) << endl;
             return false;
         }
-    } else { // Si ce n'est pas la première articulation
-        // Vérifier la distance avec l'articulation précédente
-        double dist_prec = dist_deux_pts(arts.back(), pos);
-        if (dist_prec > r_capture + epsil_zero) { // Ajouter tolérance
-            cout << message::chaine_max_distance(static_cast<unsigned>(arts.size())) << endl;
-            // L'indice du message est celui de l'articulation qu'on essaie d'ajouter
+    } else { // Cas des articulations suivantes
+        if (dist_deux_pts(arts.back(), pos) > r_capture) {
+            cout << message::chaine_max_distance(static_cast<unsigned>(arts.size()));
             return false;
         }
-        
     }
 
-    // 3. Validation: Collision avec les faiseurs EXISTANTS
+    // Vérifier les collisions avec les corps des faiseurs
     for (size_t i = 0; i < faiseurs.size(); ++i) {
         const auto& corps_faiseur = faiseurs[i]->get_corps();
         for (size_t j = 0; j < corps_faiseur.size(); ++j) {
             if (corps_faiseur[j].point_appartient_cercle(pos)) {
-                cout << message::chaine_articulation_collision(arts.size(), i, j) << endl;
-                // L'indice de l'articulation est celui qu'elle AURAIT si ajoutée
-                return false;
+                cout << message::chaine_articulation_collision(arts.size(),i,j)<<endl;
+                return false; 
             }
         }
     }
 
-    // Si toutes les validations passent, ajouter l'articulation
+    // Si toutes les vérifications passent, ajouter l'articulation à la chaîne
     chaine.ajouterArticulation(pos);
-    return true; // Succès
+    return true; 
 }
 
 /**
  * Vérifie les collisions entre tous les éléments de tous les faiseurs.
- * @return true s'il n'y a AUCUNE collision, false s'il y a au moins une collision.
+ * return true s'il n'y a AUCUNE collision, false s'il y a au moins une collision.
  */
 bool Jeu::verifier_collisions_faiseurs() const {
     for (size_t i = 0; i < faiseurs.size(); ++i) {
@@ -374,11 +289,9 @@ bool Jeu::verifier_collisions_faiseurs() const {
 
             for (size_t k = 0; k < corps1.size(); ++k) {
                 for (size_t l = 0; l < corps2.size(); ++l) {
-                    // Utiliser la collision de cercles fournie par geomod si disponible
-                    // ou calculer manuellement comme avant.
                     if (tools::collisionEntreCercles(corps1[k], corps2[l])) {
-                         cout << message::faiseur_element_collision(i, k, j, l) << endl;
-                         return false; // Collision détectée
+                         cout << message::faiseur_element_collision(i, k, j, l)<<endl;
+                         return false; 
                     }
                 }
             }
@@ -438,9 +351,8 @@ string Jeu::get_status() const {
             return "WON";
         case LOST: 
             return "LOST";
-        deafault: 
-            return "UNKNOWN"; 
-    }
+            }
+    return "UNKNOWN"; 
 }
 void Jeu::set_status(Status new_status) {
     statut = new_status;
@@ -489,8 +401,8 @@ void Jeu::update() {
     for (size_t i = 0; i < faiseurs.size(); ++i) {
         for (size_t j = i + 1; j < faiseurs.size(); ++j) {
             // Collision tête-tête
-            tools::Cercle tete_i(faiseurs[i]->get_position(), faiseurs[i]->get_rayon());
-            tools::Cercle tete_j(faiseurs[j]->get_position(), faiseurs[j]->get_rayon());
+            tools::Cercle tete_i(faiseurs[i]->get_position(),faiseurs[i]->get_rayon());
+            tools::Cercle tete_j(faiseurs[j]->get_position(),faiseurs[j]->get_rayon());
             col_fais(tete_i, tete_j, faiseur_doit_sarreter, i, j);
         }
     }
@@ -499,7 +411,7 @@ void Jeu::update() {
             faiseurs[i]->faiseurs_deplacement(arene);
         }
     }
-    bool chaine_a_ete_detruite = false;
+    //bool chaine_a_ete_detruite = false;
 } 
 
 void Jeu::col_fais(const tools::Cercle& tete_i, const tools::Cercle& tete_j, 
@@ -509,7 +421,7 @@ void Jeu::col_fais(const tools::Cercle& tete_i, const tools::Cercle& tete_j,
         // Les deux têtes se touchent, les deux faiseurs s'arrêtent
         faiseur_doit_sarreter[i] = true;
         faiseur_doit_sarreter[j] = true;
-        return; // Use return instead of continue since we're not in a loop
+        return; 
     }
     
     // Collision tête i avec corps j
@@ -555,7 +467,7 @@ void Jeu::decomposer_particule(size_t index) {
 }
 
 
-/*
+/*  Pour rendu3
 void Jeu::executer_algorithme_guidage() {
    
 }

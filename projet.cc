@@ -1,3 +1,6 @@
+// projet.cc
+// Auteur : Seli Ben Tkahyat
+// Version : 2.0 
 #include <string>
 #include "jeu.h"
 #include <gtkmm/application.h>

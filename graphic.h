@@ -1,3 +1,6 @@
+// mobile.cc
+// Auteur : theo brochier
+// Version : 1.0
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 
