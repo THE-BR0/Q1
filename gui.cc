@@ -176,43 +176,40 @@ bool My_window::key_pressed(guint keyval, guint keycode, Gdk::ModifierType state
     switch (keyval)
     {
     case '1':
-        //meme code que pour start
-        // remplacer affichage par votre code
-		//cout << keyval <<"  " << __func__ << endl;
-        if (activated) // variable d'état: true si le jeu est en cours
-        {
-            loop_conn.disconnect();
-            activated = false;
-            buttons[B_EXIT].set_sensitive(true);
-            buttons[B_OPEN].set_sensitive(true);
-            buttons[B_SAVE].set_sensitive(true);
-            buttons[B_RESTART].set_sensitive(true);
-            buttons[B_START].set_label("start");
-            buttons[B_STEP].set_sensitive(true);
-        }
-        else if (jeu.get_status() == "ONGOING") // voir jeu.h
-        {
-            loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
-                                                                 &My_window::loop),
-                                                   25);
-            activated = true;
-            buttons[B_EXIT].set_sensitive(false);
-            buttons[B_OPEN].set_sensitive(false);
-            buttons[B_SAVE].set_sensitive(false);
-            buttons[B_RESTART].set_sensitive(false);
-            buttons[B_START].set_label("stop");
-            buttons[B_STEP].set_sensitive(false);
-        }
-
-        return true;
-    case 's':
+        
         //meme code que pour step
         // remplacer affichage par votre code
 		//cout << keyval <<"  " << __func__ << endl;
          if (!activated){
                 update();
-        }       
-
+        }     
+        return true;
+    case 's':
+        //meme code que pour start
+         if (activated) // variable d'état: true si le jeu est en cours
+    {
+        loop_conn.disconnect();
+        activated = false;
+        buttons[B_EXIT].set_sensitive(true);
+        buttons[B_OPEN].set_sensitive(true);
+        buttons[B_SAVE].set_sensitive(true);
+        buttons[B_RESTART].set_sensitive(true);
+        buttons[B_START].set_label("start");
+        buttons[B_STEP].set_sensitive(true);
+    }
+    else if (jeu.get_status() == "ONGOING") // voir jeu.h
+    {
+        loop_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this,
+                                                                 &My_window::loop),
+                                                   25);
+        activated = true;
+        buttons[B_EXIT].set_sensitive(false);
+        buttons[B_OPEN].set_sensitive(false);
+        buttons[B_SAVE].set_sensitive(false);
+        buttons[B_RESTART].set_sensitive(false);
+        buttons[B_START].set_label("stop");
+        buttons[B_STEP].set_sensitive(false);
+    }
         return true;
     case 'r':
         //meme code que pour restart

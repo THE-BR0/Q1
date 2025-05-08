@@ -4,6 +4,7 @@
 #include "chaine.h"
 #include "tools.h"
 #include "mobile.h"
+#include "constantes.h"
 #include <cmath>
 #include <iostream>
 
