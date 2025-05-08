@@ -46,7 +46,7 @@ namespace tools {
     bool collisionEntreCercles(const Cercle& c1, const Cercle& c2);
     //methodes de dessin :
 
-    void dessin_cercle(Cercle cercle, Color color);
+    void dessin_cercle(Cercle cercle, Color color, Color color2);
     void dessin_point(S2d point, Color color);
     void dessin_ligne(S2d debut, S2d fin, Color color);
 

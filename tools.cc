@@ -69,9 +69,9 @@ void tools:: rebond(S2d current, Polar& VecteurVitesse) {
 bool tools::collisionEntreCercles(const Cercle& c1, const Cercle& c2) {
     return c1.cercle_intersecte_cercle(c2);
 }
-void tools::dessin_cercle(Cercle cercle, Color color){
+void tools::dessin_cercle(Cercle cercle, Color color , Color color2){
 	
-	draw_circle(cercle.get_centre().x,cercle.get_centre().y,cercle.get_rayon(),color);
+	draw_circle(cercle.get_centre().x,cercle.get_centre().y,cercle.get_rayon(),color, color2);
 }
 void tools::dessin_point(S2d point, Color color){
 	draw_point(point.x,point.y,color);

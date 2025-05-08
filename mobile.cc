@@ -49,8 +49,7 @@ unsigned Particule::get_compteur() const {
     return compteur;
 }
 void Particule::dessin() const{
-    dessin_cercle({position,r_viz},CYAN);
-    dessin_point(position,GREEN);
+    dessin_cercle({position,r_viz},GREEN,CYAN);
 }
 
 
@@ -174,6 +173,6 @@ int Faiseur::get_taille() const {
 
 void Faiseur::dessin() const {
     for(size_t i(0); i<corps.size(); i++){
-        dessin_cercle(corps[i],BLUE);
+        dessin_cercle(corps[i],BLUE, WHITE);
     }
 }

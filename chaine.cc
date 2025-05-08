@@ -53,8 +53,8 @@ void Chaine::dessin_chaine(Color color)const{
         dessin_point(articulations[i-1], color);
         // dessin du cercle de capture pour le dernier element
         if (i+1== articulations.size()){
-            dessin_cercle({articulations[i],r_capture},color);
-            dessin_point(articulations[i],color);
+            dessin_cercle({articulations[i],r_capture},color,WHITE);
+            dessin_cercle({articulations[i],r_viz},color,WHITE);
         }
     }
 }
