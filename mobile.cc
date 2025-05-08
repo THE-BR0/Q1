@@ -49,6 +49,7 @@ unsigned Particule::get_compteur() const {
     return compteur;
 }
 void Particule::dessin() const{
+    dessin_cercle({position,r_viz},CYAN);
     dessin_point(position,GREEN);
 }
 
