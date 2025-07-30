@@ -1,0 +1,12 @@
+# Build artifacts
+*.o
+*.x
+*~
+projet
+*.exe
+
+# IDE files
+.idea/
+
+# Temporary files
+/tmp/

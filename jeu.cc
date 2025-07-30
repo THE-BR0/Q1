@@ -457,7 +457,7 @@ bool Jeu::sauvegarder(const std::string& nom_fichier) const{
     return true; // Succès
 }
 
-std::string Jeu::get_status() {
+std::string Jeu::get_status() const {
     // Détermine le statut du jeu basé sur le score et l'état actuel
     if (score >= score_max) {
         return "WON";
