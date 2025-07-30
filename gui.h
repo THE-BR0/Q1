@@ -20,10 +20,11 @@ private:
     sigc::connection loop_conn;
     std::array<Gtk::Button, 6> buttons;
     std::array<Gtk::CheckButton, 2> checks;
-    std::array<Gtk::Label, 4> info_text, info_value;
+    std::array<Gtk::Label, 5> info_text, info_value;
     Gtk::DrawingArea drawing;
     std::string previous_file_name;
 	// ajouter un attribut pour accéder au jeu (instance ou pointeur)
+	Jeu jeu;
 	
     void set_commands();
 
@@ -55,7 +56,7 @@ private:
     void on_drawing_left_click(int n_press, double x, double y);
     void on_drawing_right_click(int n_press, double x, double y);
     void on_drawing_move(double x, double y);
-    S2d scaled(S2d const &pos) const;
+    tools::S2d scaled(tools::S2d const &pos) const;
 
     void set_jeu(std::string file_name);
 };

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cassert>
+#include <sstream>
+#include <iomanip>
 #include "graphic_gui.h"
 #include "gui.h"
 using namespace std;
@@ -36,7 +38,8 @@ My_window::My_window(string file_name)
       info_text({Gtk::Label("score:"),
                  Gtk::Label("particules:"),
                  Gtk::Label("faiseurs:"),
-                 Gtk::Label("articulations:")}),
+                 Gtk::Label("articulations:"),
+                 Gtk::Label("note/10:")}),
       previous_file_name(file_name),
       jeu() // Initialize jeu
 {
@@ -308,7 +311,7 @@ void My_window::update()
     update_infos();
     drawing.queue_draw();
 
-     if (jeu.get_status() !== ON_GOING) // voir jeu.h
+     if (jeu.get_status() != "ONGOING") // voir jeu.h
      {
 		//~ ...
          buttons[B_SAVE].set_sensitive(false);
@@ -343,6 +346,12 @@ void My_window::update_infos()
         info_value[1].set_text(std::to_string(jeu.get_Nb_particules()));
         info_value[2].set_text(std::to_string(jeu.get_Nb_faiseurs()));
         info_value[3].set_text(std::to_string(jeu.get_Nb_articulations()));
+        
+        // Affichage de la note sur 10 avec une décimale
+        std::ostringstream rating_stream;
+        rating_stream << std::fixed << std::setprecision(1) << jeu.get_rating();
+        info_value[4].set_text(rating_stream.str());
+        
         /*for (auto &value : info_value)
         {
             value.set_text("0");
@@ -352,6 +361,7 @@ void My_window::update_infos()
 
 void My_window::set_drawing()
 {
+    const int taille_dessin = static_cast<int>(r_max * 2); // Based on arena size
     drawing.set_content_width(taille_dessin);
     drawing.set_content_height(taille_dessin);
     drawing.set_expand();
@@ -366,7 +376,7 @@ void My_window::on_draw(const Cairo::RefPtr<Cairo::Context> &cr,
     cr->translate(width / 2, height / 2);
     cr->scale(side / (2 * r_max), -side / (2 * r_max));
 
-    jeu.dessiner();
+    // jeu.dessiner(); // Method not implemented yet
 }
 
 void My_window::set_mouse_controller()
@@ -392,7 +402,7 @@ void My_window::set_mouse_controller()
 
 // cette fonction convertit l'entrée pos contenant les coordonnées (x,y) de la souris
 // dans l'espace GTKmm vers l'espace du Modèle => sortie de la fonction.
-S2d My_window::scaled(S2d const &pos) const
+tools::S2d My_window::scaled(tools::S2d const &pos) const
 {
     int width = drawing.get_width();
     int height = drawing.get_height();
@@ -420,7 +430,7 @@ void My_window::on_drawing_move(double x, double y)
 
 void My_window::set_jeu(string file_name)
 {
-    if (jeu.readFile(file_name)) {
+    if (jeu.lecture(file_name)) {
         buttons[B_SAVE].set_sensitive(true);
         buttons[B_START].set_sensitive(true);
         buttons[B_STEP].set_sensitive(true);
