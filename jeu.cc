@@ -456,3 +456,73 @@ bool Jeu::sauvegarder(const std::string& nom_fichier) const{
     file.close(); // Fermeture explicite
     return true; // Succès
 }
+
+std::string Jeu::get_status() const {
+    // Détermine le statut du jeu basé sur le score et l'état actuel
+    if (score >= score_max) {
+        return "WON";
+    } else if (particules.empty() && faiseurs.empty()) {
+        return "LOST";
+    } else {
+        return "ONGOING";
+    }
+}
+
+void Jeu::update() {
+    // Mise à jour de l'état du jeu
+    // Cette méthode peut être étendue selon les besoins du jeu
+    
+    // Exemple de logique de mise à jour basique
+    if (score >= score_max) {
+        // Le jeu est gagné, aucune mise à jour nécessaire
+        return;
+    }
+    
+    // Ici, on pourrait ajouter la logique de mouvement des particules,
+    // la détection de collisions, la génération de nouvelles particules, etc.
+    // Pour l'instant, on garde une implémentation minimale
+}
+
+double Jeu::get_rating() const {
+    double rating = 0.0;
+    
+    // 1. Score achievement (0-4 points): score/score_max * 4
+    double score_ratio = static_cast<double>(score) / score_max;
+    rating += score_ratio * 4.0;
+    
+    // 2. Game completion bonus (0-3 points)
+    std::string status;
+    if (score >= score_max) {
+        status = "WON";
+        rating += 3.0; // Bonus maximum pour victoire
+    } else if (particules.empty() && faiseurs.empty()) {
+        status = "LOST";
+        rating += 0.0; // Aucun bonus pour défaite
+    } else {
+        status = "ONGOING";
+        rating += 1.0; // Bonus partiel pour jeu en cours
+    }
+    
+    // 3. Efficiency bonus (0-2 points): basé sur la gestion des objets
+    if (!faiseurs.empty()) {
+        double particle_efficiency = static_cast<double>(particules.size()) / faiseurs.size();
+        if (particle_efficiency > 5.0) {
+            rating += 2.0; // Très efficace
+        } else if (particle_efficiency > 2.0) {
+            rating += 1.0; // Efficace
+        } else {
+            rating += 0.5; // Peu efficace
+        }
+    }
+    
+    // 4. Progress bonus (0-1 point): basé sur les articulations de la chaîne
+    if (chaine.getArticulations().size() > 0) {
+        rating += 1.0; // Bonus pour avoir des articulations
+    }
+    
+    // S'assurer que la note reste entre 0 et 10
+    if (rating > 10.0) rating = 10.0;
+    if (rating < 0.0) rating = 0.0;
+    
+    return rating;
+}

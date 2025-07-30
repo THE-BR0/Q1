@@ -40,8 +40,10 @@ public:
 	double get_Nb_articulations() const {return chaine.getArticulations().size();}
 	double get_Nb_faiseurs() const {return faiseurs.size();}
 	double get_Nb_particules() const {return particules.size();}
-	std::string get_status ();//a ecrire
-	void update();//a ecrire
+	std::string get_status () const;
+	void update();
+	double get_rating() const; // Calcule une note sur 10 pour le jeu
+	Mode getMode() const { return mode; } // Getter pour le mode
 
 private:
 	// Méthodes auxiliaires pour readFile (maintenant privées)
